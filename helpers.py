@@ -1,7 +1,74 @@
 import numpy as np
 from typing import Tuple, Union, Literal
 
-from constants import Signs, VALUES_OF_INITIAL_ARRAY, GAME_BOARD_SIZE
+from constants import \
+    Signs, \
+    VALUES_OF_INITIAL_ARRAY, \
+    GAME_BOARD_SIZE, \
+    WINNING_COMBINATIONS, \
+    CORNERS_VALUES
+
+
+def is_any_winning_combination_filled(
+    array: np.ndarray,
+    sign: Literal[tuple(Signs.get_list_of_values())]
+) -> bool:
+    """
+       Function checks the current state of
+       the passed array and informs if someone won or not
+    """
+    for winning_combination in WINNING_COMBINATIONS:
+        winning_indexes = np.where(winning_combination)
+        number_of_sign_occurrences = np.sum(array[winning_indexes] == sign)
+        if number_of_sign_occurrences == GAME_BOARD_SIZE:
+            return True
+
+    return False
+
+
+def get_combination_to_win_or_block(
+    array: np.ndarray,
+    sign: Literal[tuple(Signs.get_list_of_values())]
+):
+    """
+        Function checks if someone may win in the next move
+        and returns the index of the field which will allow him to achieve it
+    """
+    for winning_combination in WINNING_COMBINATIONS:
+        winning_indexes = np.where(winning_combination)
+        number_of_sign_occurrences = np.sum(array[winning_indexes] == sign)
+        if number_of_sign_occurrences == GAME_BOARD_SIZE - 1:
+            winning_indexes = list(zip(*winning_indexes))
+            for winning_index in winning_indexes:
+                if array[winning_index] not in Signs.get_list_of_values():
+                    return winning_index
+
+    return None
+
+
+def get_field_number_from_user(array):
+    """
+        Function takes the field number from the user
+        until he will give us the correct one
+    """
+    while True:
+        display_array(array)
+        field_number = input(
+            f"Please choose the field that is not filled. "
+            f"For example: '{get_first_empty_field(array=array, numpy_index=False)}'. \n"
+        )
+        if field_number not in VALUES_OF_INITIAL_ARRAY:
+            print("Incorrect Value")
+            continue
+
+        if not check_if_field_is_empty(
+            array=array,
+            field_number=field_number
+        ):
+            print("Incorrect Value")
+            continue
+
+        return field_number
 
 
 def check_if_there_are_no_empty_fields(
@@ -55,17 +122,21 @@ def check_if_field_is_empty(
 
 
 def get_first_empty_field(
-    array: np.ndarray
+    array: np.ndarray,
+    numpy_index: bool = True
 ) -> Union[Tuple[int, int], None]:
     """
         Function returns numpy index of the first found filed which is empty
     """
     for field in VALUES_OF_INITIAL_ARRAY:
         if check_if_field_is_empty(
-                array=array,
-                field_number=corner
+            array=array,
+            field_number=field
         ):
+            if not numpy_index:
+                return field
             return get_height_and_width_index_from_field_number(field_number=field)
+
     return None
 
 
@@ -95,7 +166,7 @@ def set_field_by_field_number(
         Function put passed sign into the passed numpy array
         with the use of 'field_number'
         (
-            'field_number' indicates which field will be fulfilled.
+            'field_number' indicates which field will be filled.
             Please see 'INITIAL_ARRAY' variable
         )
     """

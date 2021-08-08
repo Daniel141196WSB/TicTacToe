@@ -69,6 +69,12 @@ class Signs(Enum):
     def get_list_of_values():
         return list(map(lambda s: s.value, Signs))
 
+@unique
+class EndOfTheGameCommunicates(Enum):
+    DRAW = "End of the Game. DRAW"
+    WON = "End of the Game. You WON"
+    LOSE = "End of the Game. You lose"
+
 
 INITIAL_ARRAY = np.array(
     [
@@ -81,4 +87,5 @@ INITIAL_ARRAY = np.array(
 
 VALUES_OF_INITIAL_ARRAY = INITIAL_ARRAY.flatten()
 CORNERS_VALUES = ['11', '13', '31', '33']
-GAME_BOARD_SIZE = 4
+CENTRE_VALUE = '22'
+GAME_BOARD_SIZE = 3
