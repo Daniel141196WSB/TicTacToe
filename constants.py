@@ -73,8 +73,12 @@ class Signs(Enum):
 class EndOfTheGameCommunicates(Enum):
     DRAW = "End of the Game. DRAW"
     WON = "End of the Game. You WON"
-    LOSE = "End of the Game. You lose"
+    LOSE = "End of the Game. You LOSE"
 
+@unique
+class IncorrectFieldNumber(Enum):
+    INCORRECT_VALUE = "INCORRECT VALUE OF THE FIELD"
+    TAKEN_FIELD = "THE FIELD YOU CHOSE IS ALREADY TAKEN, PLEASE CHOOSE ANOTHER ONE"
 
 INITIAL_ARRAY = np.array(
     [

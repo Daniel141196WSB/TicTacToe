@@ -1,6 +1,8 @@
 import numpy as np
+from typing import Literal
+
 from constants import \
-    INITIAL_ARRAY,\
+    INITIAL_ARRAY, \
     Signs, \
     CENTRE_VALUE, \
     EndOfTheGameCommunicates
@@ -10,7 +12,10 @@ from helpers import \
     check_if_there_are_no_empty_fields, \
     is_any_winning_combination_filled, \
     get_combination_to_win_or_block, \
-    get_index_of_first_empty_corner
+    get_index_of_first_empty_corner, \
+    display_array, \
+    check_if_field_is_empty, \
+    get_first_empty_field
 
 
 def make_computer_move(
@@ -75,15 +80,17 @@ def check_if_game_is_finished(
         Function checks if someone has already won or all fields has been filled
     """
 
-    if check_if_there_are_no_empty_fields(array=array):
-        print(EndOfTheGameCommunicates.DRAW.value)
-        return True
-
     if is_any_winning_combination_filled(
         array=array,
         sign=sign
     ):
+        display_array(array)
         print(won_lose)
+        return True
+
+    if check_if_there_are_no_empty_fields(array=array):
+        display_array(array)
+        print(EndOfTheGameCommunicates.DRAW.value)
         return True
 
     return False

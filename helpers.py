@@ -6,7 +6,8 @@ from constants import \
     VALUES_OF_INITIAL_ARRAY, \
     GAME_BOARD_SIZE, \
     WINNING_COMBINATIONS, \
-    CORNERS_VALUES
+    CORNERS_VALUES, \
+    IncorrectFieldNumber
 
 
 def is_any_winning_combination_filled(
@@ -52,20 +53,26 @@ def get_field_number_from_user(array):
         until he will give us the correct one
     """
     while True:
+
         display_array(array)
         field_number = input(
+            f"Your sign is 'X'\n"
             f"Please choose the field that is not filled. "
             f"For example: '{get_first_empty_field(array=array, numpy_index=False)}'. \n"
         )
         if field_number not in VALUES_OF_INITIAL_ARRAY:
-            print("Incorrect Value")
+            print()
+            print(IncorrectFieldNumber.INCORRECT_VALUE.value)
+            print()
             continue
 
         if not check_if_field_is_empty(
             array=array,
             field_number=field_number
         ):
-            print("Incorrect Value")
+            print()
+            print(IncorrectFieldNumber.TAKEN_FIELD.value)
+            print()
             continue
 
         return field_number
@@ -84,6 +91,8 @@ def display_array(array: np.ndarray) -> None:
     """
         Function displays current state of the passed array
     """
+    print()
+    print('***************')
     for i in range(GAME_BOARD_SIZE):
         for j in range(GAME_BOARD_SIZE):
             item = array[i][j]
@@ -94,7 +103,8 @@ def display_array(array: np.ndarray) -> None:
             print_end = '\n' if j == GAME_BOARD_SIZE - 1 else ' '
 
             print(print_item, end=print_end)
-
+    print('***************')
+    print()
 
 def get_height_and_width_index_from_field_number(
     field_number: Literal[tuple(VALUES_OF_INITIAL_ARRAY)]
@@ -149,8 +159,8 @@ def get_index_of_first_empty_corner(
 
     for corner_value in CORNERS_VALUES:
         if check_if_field_is_empty(
-                array=array,
-                field_number=corner_value
+            array=array,
+            field_number=corner_value
         ):
             return get_height_and_width_index_from_field_number(field_number=corner_value)
 
